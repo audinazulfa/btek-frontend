@@ -1,27 +1,10 @@
-.wrapper {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.wrapper .counter {
-    display: flex;
-    align-items: center;
-}
-
-.wrapper .counter .number {
-    font-size: 30px;
-    font-weight: bold;
-    margin: 0px 10px;
-}
-
-.btn {
-    height: 40px;
-    width: 40px;
-    background-color: brown;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 20px;
+.results {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    text-align: center;
 }

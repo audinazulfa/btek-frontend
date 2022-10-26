@@ -13,7 +13,7 @@ function Login() {
       };
       const encoded = new URLSearchParams(form);
       const { data } = await http().post('/auth/login', encoded.toString());
-      window.localStorage.setItem('token', data.results.token);
+      window.localStorage.setItem('token', data.result.token);
       navigate('/');
     } catch (err) {
       window.alert(err.response.data.message);

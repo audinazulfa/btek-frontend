@@ -1,42 +1,57 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import http from '../helpers/http';
 
 function EditProfile() {
-  const navigate = useNavigate();
-  const updateAction = async (e) => {
-    try {
-      e.preventDefault();
-      const form = {
-        fullName: e.target.fullName.value,
-        birthDate: e.target.birthDate.value,
-        picture: e.target.picture.value,
-      };
-      const encoded = new URLSearchParams(form);
-      const { data } = await http().put('/profile', encoded.toString());
-      window.localStorage.getItem('token', data.result.token);
-      navigate('/profile');
-    } catch (err) {
-      window.alert(err.response.data.message);
-    }
+  const [userProfile, setUserProfile] = React.useState({});
+  const getProfile = async () => {
+    const token = window.localStorage.getItem('token');
+    const { data } = await http(token).get('/profile');
+    setUserProfile(data.result);
   };
 
+  const saveData = async (e) => {
+    e.preventDefault();
+    const token = window.localStorage.getItem('token');
+
+    const form = new FormData();
+    form.append('fullName', e.target.fullName.value);
+    form.append('birthDate', e.target.birthDate.value);
+    form.append('picture', e.target.picture.files[0]);
+
+    const { data } = await http(token).put('/profile', form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    setUserProfile(data.results);
+    window.alert('Update data success');
+  };
+
+  React.useEffect(() => {
+    getProfile();
+  }, []);
   return (
-    <form onSubmit={updateAction}>
-      fullName :
-      <br />
-      <input type="text" name="fullName" />
-      <br />
-      birthDate :
-      <br />
-      <input type="text" name="birthDate" />
-      <br />
-      picture :
-      <br />
-      <input type="text" name="picture" />
-      <br />
-      <button type="submit">Save Profile</button>
-    </form>
+    <>
+      {userProfile?.picture && <img style={{ width: '250px', height: '100%' }} src={`http://localhost:8888/assets/uploads/${userProfile?.picture}`} alt={userProfile?.fullName} />}
+      <form onSubmit={saveData}>
+        <div>
+          Full Name:
+          <br />
+          <input type="text" name="fullName" defaultValue={userProfile?.fullName} />
+        </div>
+        <div>
+          Birthdate:
+          <br />
+          <input type="text" name="birthDate" defaultValue={userProfile?.birthDate} />
+        </div>
+        <div>
+          Picture:
+          <br />
+          <input type="file" name="picture" />
+        </div>
+        <button type="submit">Save</button>
+      </form>
+    </>
   );
 }
 

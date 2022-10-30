@@ -7,8 +7,6 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
 import EditProfile from './pages/EditProfile';
 
 const router = createBrowserRouter([
@@ -29,16 +27,8 @@ const router = createBrowserRouter([
     element: <RequireAuth><Profile /></RequireAuth>,
   },
   {
-    path: '/edit-profile',
+    path: '/profile/edit',
     element: <RequireAuth><EditProfile /></RequireAuth>,
-  },
-  {
-    path: '/forgot-password',
-    element: <ForgotPassword />,
-  },
-  {
-    path: '/reset-password',
-    element: <ResetPassword />,
   },
 ]);
 

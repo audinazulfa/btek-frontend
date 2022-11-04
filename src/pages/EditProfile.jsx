@@ -1,35 +1,57 @@
 import React from 'react';
-import http from '../helpers/http';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+// import http from '../helpers/http';
+
+import * as profileAction from '../redux/asyncActions/profile';
 
 function EditProfile() {
-  const [userProfile, setUserProfile] = React.useState({});
-  const getProfile = async () => {
-    const token = window.localStorage.getItem('token');
-    const { data } = await http(token).get('/profile');
-    setUserProfile(data.result);
-  };
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state) => state.profile.user);
+  // const [userProfile, setUserProfile] = React.useState({});
+  // const getProfile = async () => {
+  //   const token = window.localStorage.getItem('token');
+  //   const { data } = await http(token).get('/profile');
+  //   setUserProfile(data.result);
+  // };
 
-  const saveData = async (e) => {
+  // const saveData = async (e) => {
+  //   e.preventDefault();
+  //   const token = window.localStorage.getItem('token');
+
+  // const form = new FormData();
+  // form.append('fullName', e.target.fullName.value);
+  // form.append('birthDate', e.target.birthDate.value);
+  // form.append('picture', e.target.picture.files[0]);
+
+  // const { data } = await http(token).put('/profile', form, {
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //   },
+  // });
+  //   setUserProfile(data.results);
+  //   window.alert('Update data success');
+  // };
+
+  const saveData = (e) => {
     e.preventDefault();
     const token = window.localStorage.getItem('token');
-
-    const form = new FormData();
-    form.append('fullName', e.target.fullName.value);
-    form.append('birthDate', e.target.birthDate.value);
-    form.append('picture', e.target.picture.files[0]);
-
-    const { data } = await http(token).put('/profile', form, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    setUserProfile(data.results);
-    window.alert('Update data success');
+    const data = {
+      fullName: e.target.fullName.value,
+      birthDate: e.target.birthDat.value,
+      picture: e.target.picture.file[0],
+    };
+    dispatch(profileAction.editData({ token, data }));
   };
 
   React.useEffect(() => {
-    getProfile();
+    // getProfile();
+    const token = window.localStorage.getItem('token');
+    if (!userProfile?.fullName) {
+      dispatch(profileAction.getDataUser({ token }));
+    }
   }, []);
+
   return (
     <>
       {userProfile?.picture && <img style={{ width: '250px', height: '100%' }} src={`http://localhost:8888/assets/uploads/${userProfile?.picture}`} alt={userProfile?.fullName} />}
@@ -49,8 +71,9 @@ function EditProfile() {
           <br />
           <input type="file" name="picture" />
         </div>
-        <button type="submit">Save</button>
+        <Link to="/profile/edit">Edit Profile</Link>
       </form>
+      <Link to="/profile">Go to Profile Page</Link>
     </>
   );
 }

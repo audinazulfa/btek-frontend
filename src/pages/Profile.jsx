@@ -1,16 +1,27 @@
 import React from 'react';
-import http from '../helpers/http';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import * as profileAction from '../redux/asyncActions/profile';
+import * as profileReducerAction from '../redux/reducers/profile';
 
 function Profile() {
-  const [userProfile, setUserProfile] = React.useState({});
-  const getProfile = async () => {
-    const token = window.localStorage.getItem('token');
-    const { data } = await http(token).get('/profile');
-    setUserProfile(data.result);
-  };
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state) => state.profile.user);
+  // const [userProfile, setUserProfile] = React.useState({});
+  // const getProfile = async () => {
+  //   const token = window.localStorage.getItem('token');
+  //   const { data } = await http(token).get('/profile');
+  //   setUserProfile(data.result);
+  // };
 
   React.useEffect(() => {
-    getProfile();
+    // getProfile();
+    const token = window.localStorage.getItem('token');
+    if (!userProfile?.fullName) {
+      dispatch(profileAction.getDataUser({ token }));
+    }
   }, []);
 
   return (
@@ -30,6 +41,9 @@ function Profile() {
         {' '}
         {userProfile?.picture}
       </div>
+      <Link to="/profile/edit">Edit Profile</Link>
+      <br />
+      <button onClick={() => dispatch(profileReducerAction.resetProfile())}>Reset data Redux</button>
     </div>
   );
 }

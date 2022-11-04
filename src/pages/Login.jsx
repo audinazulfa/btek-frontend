@@ -41,30 +41,35 @@ function Login() {
     }
   };
   return (
-    <Formik
-      initialValues={{
-        email: '',
-        password: '',
-      }}
-      validationSchema={basicAuthSchema}
-      onSubmit={submitAction}
-    >
-      {({ errors, touched }) => (
-        <Form>
-          <Field type="text" name="email" />
-          <br />
-          {errors.email && touched.email ? (
-            <div>{errors.email}</div>
-          ) : null}
-          <Field type="password" name="password" />
-          <br />
-          {errors.password && touched.password ? (
-            <div>{errors.password}</div>
-          ) : null}
-          <button type="submit">Login</button>
-        </Form>
-      )}
-    </Formik>
+    <div className="h-screen flex justify-center item-center">
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+        }}
+        validationSchema={basicAuthSchema}
+        onSubmit={submitAction}
+      >
+        {({ errors, touched }) => (
+          <Form>
+            <label htmlFor="email">Email</label>
+            <Field className="input input-bordered w-full max-w-xs" type="text" name="email" />
+            <br />
+            {errors.email && touched.email ? (
+              <div className="text-red-400">{errors.email}</div>
+            ) : null}
+            <br />
+            <label htmlFor="password">Password</label>
+            <Field className="input input-bordered w-full max-w-xs" type="password" name="password" />
+            <br />
+            {errors.password && touched.password ? (
+              <div className="text-red-400">{errors.password}</div>
+            ) : null}
+            <button className="btn btn-primary block w-full" type="submit">Login</button>
+          </Form>
+        )}
+      </Formik>
+    </div>
 
   // <form onSubmit={submitAction}>
   //   <input type="email" name="email" />

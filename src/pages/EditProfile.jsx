@@ -1,51 +1,38 @@
 import React from 'react';
+import { Formik, Form, Field } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-// import http from '../helpers/http';
-
+import { useNavigate } from 'react-router-dom';
+import YupPassword from 'yup-password';
+import * as Yup from 'yup';
 import * as profileAction from '../redux/asyncActions/profile';
 
+YupPassword(Yup);
+
 function EditProfile() {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const editProfileSchema = Yup.object().shape({
+    fullName: Yup.string().required(),
+    birthDate: Yup.string().required(),
+    picture: Yup.mixed().nullable(),
+  });
   const userProfile = useSelector((state) => state.profile.user);
-  // const [userProfile, setUserProfile] = React.useState({});
-  // const getProfile = async () => {
-  //   const token = window.localStorage.getItem('token');
-  //   const { data } = await http(token).get('/profile');
-  //   setUserProfile(data.result);
-  // };
+  const dispatch = useDispatch();
 
-  // const saveData = async (e) => {
-  //   e.preventDefault();
-  //   const token = window.localStorage.getItem('token');
-
-  // const form = new FormData();
-  // form.append('fullName', e.target.fullName.value);
-  // form.append('birthDate', e.target.birthDate.value);
-  // form.append('picture', e.target.picture.files[0]);
-
-  // const { data } = await http(token).put('/profile', form, {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //   },
-  // });
-  //   setUserProfile(data.results);
-  //   window.alert('Update data success');
-  // };
-
-  const saveData = (e) => {
-    e.preventDefault();
+  const [file, setFile] = React.useState(null);
+  const submitAction = async (e) => {
     const token = window.localStorage.getItem('token');
     const data = {
-      fullName: e.target.fullName.value,
-      birthDate: e.target.birthDat.value,
-      picture: e.target.picture.file[0],
+      fullName: e.fullName,
+      birthDate: e.birthDate,
+      picture: file,
     };
+
     dispatch(profileAction.editData({ token, data }));
+    navigate('/profile');
   };
 
   React.useEffect(() => {
-    // getProfile();
     const token = window.localStorage.getItem('token');
     if (!userProfile?.fullName) {
       dispatch(profileAction.getDataUser({ token }));
@@ -53,28 +40,51 @@ function EditProfile() {
   }, []);
 
   return (
-    <>
-      {userProfile?.picture && <img style={{ width: '250px', height: '100%' }} src={`http://localhost:8888/assets/uploads/${userProfile?.picture}`} alt={userProfile?.fullName} />}
-      <form onSubmit={saveData}>
-        <div>
-          Full Name:
-          <br />
-          <input type="text" name="fullName" defaultValue={userProfile?.fullName} />
+    <div className="grid grid-cols-5 gap-4">
+      <div className="h-screen flex justify-center items-center col-start-2 col-span-4">
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+            <div className="card-body">
+              <h className="text-xl font-bold text-center">Edit profile</h>
+              <div className="form-control">
+                <div className="flex justify-center items-center border-2 border-slate-500 rounded-xl py-2 my-2">
+                  {userProfile?.picture && <img style={{ width: '240px', height: '100%' }} src={`http://localhost:8888/assets/uploads/${userProfile?.picture}`} alt={userProfile?.picture} />}
+                </div>
+                <Formik
+                  initialValues={{
+                    fullName: '',
+                    birthDate: '',
+                  }}
+                  validationSchema={editProfileSchema}
+                  onSubmit={submitAction}
+                >
+                  {({ errors, touched }) => (
+                    <Form>
+                      <label htmlFor="email">Full name</label>
+                      <Field type="text" name="fullName" className="input input-bordered w-full max-w-xs mb-2" placeholder="Full name" />
+                      {errors.fullName && touched.fullName ? (
+                        <div className="text-red-400">{errors.fullName}</div>
+                      ) : null}
+                      <label htmlFor="picture">Picture</label>
+                      <input type="file" onChange={(e) => setFile(e.target.files[0])} name="picture" className="file-input file-input-bordered w-full max-w-xs mb-2" />
+                      {errors.picture && touched.picture ? (
+                        <div className="text-red-400">{errors.picture}</div>
+                      ) : null}
+                      <label htmlFor="birtDate">Birth date</label>
+                      <Field type="text" name="birthDate" className="input input-bordered w-full max-w-xs mb-5" placeholder="Birth date" />
+                      {errors.birthDate && touched.birthDate ? (
+                        <div className="text-red-400">{errors.birthDate}</div>
+                      ) : null}
+                      <button type="submit" className="btn btn-primary block w-full">save changes</button>
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          Birthdate:
-          <br />
-          <input type="text" name="birthDate" defaultValue={userProfile?.birthDate} />
-        </div>
-        <div>
-          Picture:
-          <br />
-          <input type="file" name="picture" />
-        </div>
-        <Link to="/profile/edit">Edit Profile</Link>
-      </form>
-      <Link to="/profile">Go to Profile Page</Link>
-    </>
+      </div>
+    </div>
   );
 }
 

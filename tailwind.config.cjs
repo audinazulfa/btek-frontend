@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 const colors = require('tailwindcss/colors');
+const daisyui = require('daisyui');
 
 module.exports = {
   content: [
@@ -14,7 +15,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('daisyui'),
+    daisyui,
   ],
   daisyui: {
     themes: ['pastel'],

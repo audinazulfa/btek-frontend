@@ -37,12 +37,12 @@ function Login() {
   return (
     <div className="grid grid-cols-6 gap-4">
       <div className="h-screen flex justify-center items-center col-start-2 col-span-4">
-        <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="hero-content flex-col lg:flex-col">
           <div className="text-center lg:text-center">
             <h1 className="text-4xl font-bold">Hello!</h1>
-            <p className="py-10">Sign into Your account!</p>
+            <p className="py-2">Sign into Your account!</p>
           </div>
-          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-green-300">
+          <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-teal-400">
             <div className="card-body">
               <div className="form-control">
                 <Formik
@@ -55,26 +55,26 @@ function Login() {
                 >
                   {({ errors, touched }) => (
                     <Form>
-                      <label htmlFor="email">Email</label>
-                      <Field className="input input-bordered w-full max-w-xs " type="email" name="email" placeholder="Email" />
+                      <label className="font-semibold text-md m-2" htmlFor="email">Email</label>
+                      <Field className="input input-bordered w-full max-w-xs" type="email" name="email" placeholder="Email" />
                       <br />
                       {errors.email && touched.email ? (
                         <div className="text-red-400">{errors.email}</div>
                       ) : null}
                       <br />
-                      <label htmlFor="password">Password</label>
+                      <label className="font-semibold text-md m-2" htmlFor="password">Password</label>
                       <Field className="input input-bordered w-full max-w-xs" type="password" name="password" placeholder="Password" />
                       <br />
                       {errors.password && touched.password ? (
                         <div className="text-red-400">{errors.password}</div>
                       ) : null}
                       <br />
-                      <button className="btn btn-primary block w-full" type="submit">Login</button>
-                      <Link className="link text-sm hover:text-primary text-sm m-3 " to="/forgot-password">Forgot Password?</Link>
+                      <button className="btn btn-primary block w-full font-bold" type="submit">Login</button>
+                      <Link className="link text-sm hover:text-primary text-sm text-black" to="/forgot-password">Forgot Password?</Link>
                       <br />
                       <p className="text-sm m-2 p-3 text-center">
-                        Don't have an account
-                        <Link className="link text-sm hover:text-primary" to="/register">Register</Link>
+                        Don't have an account?
+                        <Link className="link text-sm hover:text-primary" to="/register">Sign Up</Link>
                       </p>
                     </Form>
                   )}

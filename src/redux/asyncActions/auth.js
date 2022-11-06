@@ -31,7 +31,10 @@ export const forgotPassword = createAsyncThunk('auth/forgot-password', async ({ 
 });
 
 export const resetPassword = createAsyncThunk('auth/reset-password', async ({
-  email, code, newPassword, confirmPassword,
+  email,
+  code,
+  newPassword,
+  confirmPassword,
 }) => {
   const form = {
     email,

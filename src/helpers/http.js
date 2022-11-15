@@ -6,7 +6,7 @@ const http = (token) => {
     headers.authorization = `Bearer ${token}`;
   }
   return axios.create({
-    baseURL: 'https://btek-backend-gules.vercel.app/',
+    baseURL: 'http://localhost:8888',
     headers,
   });
 };

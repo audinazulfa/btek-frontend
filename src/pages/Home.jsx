@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import * as authAction from '../redux/reducers/auth';
+import Button from '../components/Button';
 
 function Home() {
   const navigate = useNavigate();
